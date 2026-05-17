@@ -47,14 +47,8 @@
       font-weight: bold;
     }
 
-    button:hover {
-      background: #2563eb;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    button:hover { background: #2563eb; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
 
     img {
       width: 100%;
@@ -70,6 +64,7 @@
     #error {
       color: #f87171;
       margin-top: 10px;
+      white-space: pre-wrap;
     }
 
     .loader {
@@ -88,7 +83,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
   </style>
 </head>
 
@@ -122,12 +116,10 @@
 </div>
 
 <script>
-const API = "https://website1-production-40e6.up.railway.app";
+const API = "https://website1-production-bff8.up.railway.app"; // FIXED DOMAIN
 
 loadUsage();
 
-// -------------------------
-// VIDEO PREVIEW
 // -------------------------
 function loadVideoInfo() {
   const url = document.getElementById("url").value;
@@ -154,29 +146,23 @@ function loadVideoInfo() {
 function extractVideoId(url) {
   try {
     const u = new URL(url);
-    if (u.hostname.includes("youtu.be")) {
-      return u.pathname.slice(1);
-    }
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
     return u.searchParams.get("v");
   } catch {
     return null;
   }
 }
 
-// -------------------------
-// QUALITY TOGGLE
-// -------------------------
 function toggleQuality() {
   const format = document.getElementById("format").value;
-  const quality = document.getElementById("quality");
-
-  quality.style.display = (format === "mp3") ? "none" : "block";
+  document.getElementById("quality").style.display =
+    format === "mp3" ? "none" : "block";
 }
 
 toggleQuality();
 
 // -------------------------
-// DOWNLOAD
+// FIXED DOWNLOAD (IMPORTANT)
 // -------------------------
 async function downloadVideo() {
   const url = document.getElementById("url").value;
@@ -196,26 +182,35 @@ async function downloadVideo() {
   btn.disabled = true;
   btn.innerHTML = `<span class="loader"></span>Processing...`;
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+
   try {
     const res = await fetch(
-      `${API}/download?url=` +
-      encodeURIComponent(url) +
-      `&format=${format}&quality=${quality}`
+      `${API}/download?url=${encodeURIComponent(url)}&format=${format}&quality=${quality}`,
+      { signal: controller.signal }
     );
 
+    clearTimeout(timeout);
+
+    // 🔴 IMPORTANT: show real backend error
     if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || "Download failed");
+      const text = await res.text();
+      throw new Error(text);
     }
 
     const blob = await res.blob();
+
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "video";
+    link.download = "video.mp4";
     link.click();
 
   } catch (err) {
-    error.innerText = err.message;
+    error.innerText =
+      err.name === "AbortError"
+        ? "Request timed out (video too slow or server overloaded)"
+        : err.message || "Failed to fetch";
   }
 
   btn.disabled = false;
@@ -223,8 +218,6 @@ async function downloadVideo() {
   loadUsage();
 }
 
-// -------------------------
-// USAGE
 // -------------------------
 async function loadUsage() {
   try {
@@ -234,12 +227,13 @@ async function loadUsage() {
     document.getElementById("usage").innerText =
       `Usage: ${data.used ?? 0} / ${data.limit ?? 10}`;
 
-  } catch (e) {
-    console.log("Usage load failed");
+  } catch {
+    document.getElementById("usage").innerText =
+      "Usage: error loading";
   }
 }
 
-window.onload = function () {
+window.onload = () => {
   loadUsage();
   toggleQuality();
 };
