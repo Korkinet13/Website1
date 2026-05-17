@@ -10,7 +10,7 @@ from datetime import date
 
 import subprocess
 
-@app.route("/ffmpeg-test")
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -29,7 +29,7 @@ def ffmpeg_test():
         return result[:500]
     except Exception as e:
         return str(e)
-
+@app.route("/ffmpeg-test")
 @app.route("/usage", methods=["GET"])
 def usage():
 
