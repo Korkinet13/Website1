@@ -161,17 +161,11 @@ def download():
             "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best"
         )
 
-        ydl_opts = {
+       ydl_opts = {
         "format": fmt,
         "outtmpl": outtmpl,
         "merge_output_format": "mp4",
-    
-    
-        "extractor_args": {
-            "youtube": {
-                "player_client": ["android"]
-            }
-        }
+        "cookiefile": "cookies.txt"
     }
 
     # -------------------------
