@@ -202,11 +202,11 @@
     try {
 
       const res = await fetch(
-        "https://website1-production-40e6.up.railway.app" +
-        encodeURIComponent(url) +
-        "&format=" + format +
-        "&quality=" + quality
-      );
+  "https://website1-production-40e6.up.railway.app/download?url=" +
+  encodeURIComponent(url) +
+  "&format=" + format +
+  "&quality=" + quality
+);
 
       // if backend returns error
       if (!res.ok) {
@@ -233,7 +233,7 @@
 
   async function loadUsage() {
   try {
-    const res = await fetch("https://website1-production-40e6.up.railway.app");
+    const res = await fetch("https://website1-production-40e6.up.railway.app/usage");
     const data = await res.json();
 
     document.getElementById("usage").innerText =
