@@ -12,7 +12,7 @@ from datetime import date
 app = Flask(__name__)
 CORS(app)
 
-DOWNLOAD_FOLDER = "downloads"
+DOWNLOAD_FOLDER = "/tmp/downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 # -------------------------
