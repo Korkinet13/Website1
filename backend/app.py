@@ -10,7 +10,7 @@ from datetime import date
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, origins=["https://your-vercel-app.vercel.app"])
 
 DOWNLOAD_FOLDER = "/tmp/downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
