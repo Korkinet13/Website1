@@ -202,7 +202,7 @@
     try {
 
       const res = await fetch(
-        "http://127.0.0.1:5000/download?url=" +
+        "https://website1-production-40e6.up.railway.app" +
         encodeURIComponent(url) +
         "&format=" + format +
         "&quality=" + quality
@@ -233,7 +233,7 @@
 
   async function loadUsage() {
   try {
-    const res = await fetch("http://127.0.0.1:5000/usage");
+    const res = await fetch("https://website1-production-40e6.up.railway.app");
     const data = await res.json();
 
     document.getElementById("usage").innerText =
