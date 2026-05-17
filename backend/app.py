@@ -23,13 +23,6 @@ os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 # -------------------------
 user_downloads = {}  # {ip: {date: count}}
 
-def ffmpeg_test():
-    try:
-        result = subprocess.check_output(["ffmpeg", "-version"]).decode()
-        return result[:500]
-    except Exception as e:
-        return str(e)
-@app.route("/ffmpeg-test")
 @app.route("/usage", methods=["GET"])
 def usage():
 
