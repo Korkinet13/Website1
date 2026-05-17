@@ -8,7 +8,15 @@ import time
 import threading
 from datetime import date
 
+import subprocess
 
+@app.route("/ffmpeg-test")
+def ffmpeg_test():
+    try:
+        result = subprocess.check_output(["ffmpeg", "-version"]).decode()
+        return result[:500]
+    except Exception as e:
+        return str(e)
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
