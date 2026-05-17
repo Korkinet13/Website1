@@ -60,7 +60,7 @@ def cleanup_files():
                         pass
 
 
-threading.Thread(target=cleanup_files, daemon=True).start()
+#threading.Thread(target=cleanup_files, daemon=True).start()
 
 
 # -------------------------
@@ -165,8 +165,12 @@ def download():
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
 
-    filename = ydl.prepare_filename(info)
-
+    filename = None
+    for f in os.listdir(DOWNLOAD_FOLDER):
+        if f.startswith(file_id):
+            filename = os.path.join(DOWNLOAD_FOLDER, f)
+            break
+            
     if format_type == "mp3":
         filename = filename.rsplit(".", 1)[0] + ".mp3"
     today = str(date.today())
