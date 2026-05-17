@@ -162,10 +162,17 @@ def download():
         )
 
         ydl_opts = {
-            "format": fmt,
-            "outtmpl": outtmpl,
-            "merge_output_format": "mp4",
+        "format": fmt,
+        "outtmpl": outtmpl,
+        "merge_output_format": "mp4",
+    
+    
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["android"]
+            }
         }
+    }
 
     # -------------------------
     # DOWNLOAD
